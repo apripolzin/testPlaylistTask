@@ -2,7 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
 
-import PlayList 1.0
+import PlayListModel 1.0
 
 Frame {
     implicitHeight: 250

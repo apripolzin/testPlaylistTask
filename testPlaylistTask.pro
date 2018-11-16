@@ -14,7 +14,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    playlistmodel.cpp
+    playlistmodel.cpp \
+    playlist.cpp
 
 RESOURCES += qml.qrc \
     images.qrc
@@ -31,4 +32,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    playlistmodel.h
+    playlistmodel.h \
+    playlist.h

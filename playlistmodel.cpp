@@ -1,7 +1,11 @@
+#include <QDebug>
+
 #include "playlistmodel.h"
+#include "playlist.h"
 
 PlayListModel::PlayListModel(QObject *parent)
     : QAbstractListModel(parent)
+    , m_playList(nullptr)
 {
 }
 
@@ -38,6 +42,9 @@ bool PlayListModel::setData(const QModelIndex &index, const QVariant &value, int
 {
     if (data(index, role) != value) {
         // FIXME: Implement me!
+        qDebug() << "Set Data from cpp" << index.row() << value << role;
+
+
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
@@ -59,4 +66,9 @@ QHash<int, QByteArray> PlayListModel::roleNames() const
     names[DescriptionRole] = "description";
     names[TypeRole] = "type";
     return names;
+}
+
+void PlayListModel::setPlayList(PlayList *list)
+{
+    m_playList = list;
 }

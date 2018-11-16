@@ -3,6 +3,8 @@
 
 #include <QAbstractListModel>
 
+class PlayList;
+
 class PlayListModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -28,7 +30,11 @@ public:
 
     virtual QHash<int, QByteArray> roleNames() const override;
 
+    void setPlayList(PlayList *list);
+
 private:
+    PlayList *m_playList;
+
 };
 
 #endif // PLAYLISTMODEL_H
