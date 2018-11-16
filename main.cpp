@@ -11,12 +11,14 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<PlayListModel>("PlayListModel", 1, 0, "PlayListModel");
+   // qmlRegisterType<PlayListModel>("PlayListModel", 1, 0, "PlayListModel");
 
     PlayList playList;
+    PlayListModel model;
+    model.setPlayList(&playList);
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty(QStringLiteral("PlayList"), &playList);
+    engine.rootContext()->setContextProperty(QStringLiteral("PlayListModel"), &model);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;

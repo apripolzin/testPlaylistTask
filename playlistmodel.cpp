@@ -15,7 +15,8 @@ int PlayListModel::rowCount(const QModelIndex &parent) const
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
         return 0;
-    return 100;
+
+    return m_playList->items().size();
 
     // FIXME: Implement me!
 }
@@ -25,13 +26,27 @@ QVariant PlayListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
+    const int row = index.row();
+    const PlayListItem &item = m_playList->items().at(row);
+
     switch (role) {
-    case PlayingRole:
-        return QVariant(QStringLiteral("playing"));
+    case PlayingRole: {
+        if (item.isPlaying) {
+            return QVariant(QStringLiteral("playing"));
+        }
+        return QVariant(QStringLiteral("stopped"));
+    }
     case DescriptionRole:
-        return QVariant(QStringLiteral("description"));
-    case TypeRole:
-        return QVariant(QStringLiteral("USB"));
+        return QVariant(item.description);
+    case TypeRole:{
+        if (item.itemType == PlayListItem::Type_Usb) {
+            return QVariant(QStringLiteral("USB"));
+        }
+        if (item.itemType == PlayListItem::Type_Bta) {
+            return QVariant(QStringLiteral("BTA"));
+        }
+
+    }
     }
 
     // FIXME: Implement me!
@@ -43,8 +58,8 @@ bool PlayListModel::setData(const QModelIndex &index, const QVariant &value, int
     if (data(index, role) != value) {
         // FIXME: Implement me!
         qDebug() << "Set Data from cpp" << index.row() << value << role;
-
-
+        PlayListItem &item = m_playList->items()[index.row()];
+        item.isPlaying = !item.isPlaying;
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }

@@ -26,7 +26,7 @@ public:
     explicit PlayList(QObject *parent = nullptr);
     bool setItemAt(int index, const PlayListItem &item);
 
-    QVector<PlayListItem> items() const;
+    QVector<PlayListItem> &items();
 
 private:
     QVector<PlayListItem> m_items;
