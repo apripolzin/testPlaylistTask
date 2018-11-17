@@ -2,8 +2,7 @@
 #define PLAYLISTMODEL_H
 
 #include <QAbstractListModel>
-
-class PlayList;
+#include "playlist.h"
 
 class PlayListModel : public QAbstractListModel
 {

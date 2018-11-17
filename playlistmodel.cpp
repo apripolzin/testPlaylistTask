@@ -1,7 +1,6 @@
 #include <QDebug>
 
 #include "playlistmodel.h"
-#include "playlist.h"
 
 PlayListModel::PlayListModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -11,14 +10,14 @@ PlayListModel::PlayListModel(QObject *parent)
 
 int PlayListModel::rowCount(const QModelIndex &parent) const
 {
-    // For list models only the root node (an invalid parent) should return the list's size. For all
-    // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
     if (parent.isValid())
         return 0;
 
-    return m_playList->items().size();
+    if (m_playList) {
+        return m_playList->size();
+    }
 
-    // FIXME: Implement me!
+    return 0;
 }
 
 QVariant PlayListModel::data(const QModelIndex &index, int role) const
@@ -27,39 +26,55 @@ QVariant PlayListModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     const int row = index.row();
-    const PlayListItem &item = m_playList->items().at(row);
+    const PlayListItem &item = m_playList->at(row);
 
     switch (role) {
     case PlayingRole: {
-        if (item.isPlaying) {
+        if (item.isPlaying()) {
             return QVariant(QStringLiteral("playing"));
         }
         return QVariant(QStringLiteral("stopped"));
     }
     case DescriptionRole:
-        return QVariant(item.description);
-    case TypeRole:{
-        if (item.itemType == PlayListItem::Type_Usb) {
+        return QVariant(item.description());
+    case TypeRole:
+        if (item.itemType() == PlayListItem::Type_Usb) {
             return QVariant(QStringLiteral("USB"));
         }
-        if (item.itemType == PlayListItem::Type_Bta) {
+        if (item.itemType() == PlayListItem::Type_Bta) {
             return QVariant(QStringLiteral("BTA"));
         }
-
-    }
     }
 
-    // FIXME: Implement me!
     return QVariant();
 }
 
 bool PlayListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (data(index, role) != value) {
-        // FIXME: Implement me!
-        qDebug() << "Set Data from cpp" << index.row() << value << role;
-        PlayListItem &item = m_playList->items()[index.row()];
-        item.isPlaying = !item.isPlaying;
+        if (!value.canConvert<QString>()){
+            return false;
+        }
+        const QString &command = value.toString();
+        if (command == "playing")
+        {
+            //Stop track if is playing another
+            for (int i = 0; i < m_playList->size(); ++i) {
+                PlayListItem &item = (*m_playList)[i];
+                if (item.isPlaying()) {
+                    item.stop();
+                    emit dataChanged(this->index(i), this->index(i), QVector<int>() << role);
+                }
+            }
+        }
+
+        const int row = index.row();
+        PlayListItem &track = m_playList->data()[row];
+        if (track.isPlaying()){
+            track.stop();
+        } else if (!track.isPlaying()) {
+            track.play();
+        }
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
@@ -71,7 +86,7 @@ Qt::ItemFlags PlayListModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-    return Qt::ItemIsEditable; // FIXME: Implement me!
+    return Qt::ItemIsEditable;
 }
 
 QHash<int, QByteArray> PlayListModel::roleNames() const

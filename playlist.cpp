@@ -1,34 +1,40 @@
 #include "playlist.h"
 
-PlayList::PlayList(QObject *parent) : QObject(parent)
-{
-    m_items << PlayListItem(false, "track1", PlayListItem::Type_Usb)
-    << PlayListItem(false, "track2", PlayListItem::Type_Bta)
-    << PlayListItem(false, "track3", PlayListItem::Type_Usb)
-    << PlayListItem(false, "track3", PlayListItem::Type_Bta)
-    << PlayListItem(false, "track4", PlayListItem::Type_Bta)
-    << PlayListItem(false, "track5", PlayListItem::Type_Bta)
-    << PlayListItem(false, "track6", PlayListItem::Type_Usb)
-    << PlayListItem(false, "track7", PlayListItem::Type_Bta)
-    << PlayListItem(false, "track8", PlayListItem::Type_Bta)
-       ;
+#include <QString>
+#include <QDebug>
 
+
+PlayListItem::PlayListItem(QString description, PlayListItem::PlayListItemType type)
+    : m_isPlaying(false)
+    , m_description(description)
+    , m_itemType(type)
+{}
+
+void PlayListItem::play()
+{
+    qDebug() << "playing" << m_description;
+    m_isPlaying = true;
 }
 
-bool PlayList::setItemAt(int index, const PlayListItem &item)
+void PlayListItem::stop()
 {
-    if (index < 0 || index > m_items.size()) {
-        return false;
-    }
-    const PlayListItem &oldItem = m_items.at(index);
-    if (oldItem.isPlaying == item.isPlaying) {
-        return false;
-    }
-    m_items[index] = item;
-    return true;
+    qDebug() << "stopping" << m_description;
+    m_isPlaying = false;
 }
 
-QVector<PlayListItem> &PlayList::items()
+bool PlayListItem::isPlaying() const
 {
-    return m_items;
+    return  m_isPlaying;
 }
+
+QString PlayListItem::description() const
+{
+    return  m_description;
+}
+
+PlayListItem::PlayListItemType PlayListItem::itemType() const
+{
+    return m_itemType;
+}
+
+

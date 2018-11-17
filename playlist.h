@@ -1,35 +1,30 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
-#include <QObject>
 #include <QString>
 #include <QVector>
 
-struct PlayListItem {
+class QString;
+
+class PlayListItem {
+public:
     enum PlayListItemType {
         Type_Usb, Type_Bta
     };
-    PlayListItem(bool playing = false, QString desc = "no description", PlayListItemType type = Type_Usb)
-        : isPlaying(playing)
-        , description(desc)
-        , itemType(type)
-    {}
-    bool isPlaying;
-    QString description;
-    PlayListItemType itemType;
-};
+    PlayListItem(QString description = "empty description", PlayListItemType type = Type_Usb);
+    void play();
+    void stop();
+    bool isPlaying() const;
 
-class PlayList : public QObject
-{
-    Q_OBJECT
-public:
-    explicit PlayList(QObject *parent = nullptr);
-    bool setItemAt(int index, const PlayListItem &item);
-
-    QVector<PlayListItem> &items();
+    QString description() const;
+    PlayListItemType itemType() const;
 
 private:
-    QVector<PlayListItem> m_items;
+    bool m_isPlaying;
+    QString m_description;
+    PlayListItemType m_itemType;
 };
+
+typedef QVector<PlayListItem> PlayList;
 
 #endif // PLAYLIST_H
