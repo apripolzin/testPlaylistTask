@@ -1,7 +1,6 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
-#include <QString>
 #include <QVector>
 
 class QString;

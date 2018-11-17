@@ -1,5 +1,3 @@
-#include <QDebug>
-
 #include "playlistmodel.h"
 
 PlayListModel::PlayListModel(QObject *parent)
@@ -52,6 +50,9 @@ QVariant PlayListModel::data(const QModelIndex &index, int role) const
 bool PlayListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (data(index, role) != value) {
+        if ( role != PlayingRole) {
+            return  false;
+        }
         if (!value.canConvert<QString>()){
             return false;
         }
@@ -65,12 +66,13 @@ bool PlayListModel::setData(const QModelIndex &index, const QVariant &value, int
                     track.stop();
                     const QModelIndex &changedIndex = this->index(row);
                     emit dataChanged(changedIndex, changedIndex, QVector<int>() << role);
+                    break;
                 }
             }
         }
 
         const int row = index.row();
-        PlayListItem &track = m_playList->data()[row];
+        PlayListItem &track = (*m_playList)[row];
         if (track.isPlaying()){
             track.stop();
         } else if (!track.isPlaying()) {

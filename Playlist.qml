@@ -10,6 +10,7 @@ Frame {
     ListView {
         anchors.fill: parent
         model: PlayListModel
+        spacing: 2
 
         delegate: Rectangle {
             width: parent.width
@@ -37,7 +38,7 @@ Frame {
                     font.bold: true
                     font.pixelSize: 14
                     Layout.fillWidth: true
-                    text: model.type + " - " + model.description
+                    text: model.type + " -> " + model.description
                     horizontalAlignment: Text.AlignHCenter
                 } //Text
                 Image {
