@@ -1,8 +1,6 @@
 #include "playlist.h"
 
-#include <QString>
 #include <QDebug>
-
 
 PlayListItem::PlayListItem(QString description, PlayListItem::PlayListItemType type)
     : m_isPlaying(false)

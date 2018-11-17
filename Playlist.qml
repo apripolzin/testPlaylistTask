@@ -30,6 +30,17 @@ Frame {
                 text: model.description
                 horizontalAlignment: Text.AlignHCenter
                 readOnly: true
+
+                background: Rectangle {
+                    border.color: "black"
+                    color: {
+                        if (model.playing === "playing") {
+                            return "lightblue"
+                        }
+                        return "white"
+                    }
+                }
+
                 MouseArea {
                     anchors.centerIn: parent
                     width: delegate.width

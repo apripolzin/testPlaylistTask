@@ -58,12 +58,13 @@ bool PlayListModel::setData(const QModelIndex &index, const QVariant &value, int
         const QString &command = value.toString();
         if (command == "playing")
         {
-            //Stop track if is playing another
-            for (int i = 0; i < m_playList->size(); ++i) {
-                PlayListItem &item = (*m_playList)[i];
-                if (item.isPlaying()) {
-                    item.stop();
-                    emit dataChanged(this->index(i), this->index(i), QVector<int>() << role);
+            //Stop track if playing another
+            for (int row = 0; row < m_playList->size(); ++row) {
+                PlayListItem &track = (*m_playList)[row];
+                if (track.isPlaying()) {
+                    track.stop();
+                    const QModelIndex &changedIndex = this->index(row);
+                    emit dataChanged(changedIndex, changedIndex, QVector<int>() << role);
                 }
             }
         }
