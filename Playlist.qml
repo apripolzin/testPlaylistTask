@@ -7,62 +7,60 @@ Frame {
     implicitHeight: 250
     implicitWidth: 250
 
-    clip: true
-
     ListView {
         anchors.fill: parent
         model: PlayListModel
 
-        delegate: RowLayout {
-            id : delegate
+        delegate: Rectangle {
             width: parent.width
-            Image {
-                source: {
-                    if (model.type === "USB") {
-                        return "qrc:/images/usb.png"
-                    }
-                    return "qrc:/images/bta.png"
+            height: 40
+            border.color: "black"
+            radius: 4
+            color: {
+                if (model.playing === "playing") {
+                    return "lightblue"
                 }
+                return "white"
             }
-            TextField {
-                id : textField
-                Layout.fillWidth: true
-                text: model.description
-                horizontalAlignment: Text.AlignHCenter
-                readOnly: true
-
-                background: Rectangle {
-                    border.color: "black"
-                    color: {
-                        if (model.playing === "playing") {
-                            return "lightblue"
+            RowLayout {
+                anchors.fill: parent
+                Image {
+                    Layout.margins: 2
+                    source: {
+                        if (model.type === "USB") {
+                            return "qrc:/images/usb.png"
                         }
-                        return "white"
+                        return "qrc:/images/bta.png"
                     }
-                }
-
-                MouseArea {
-                    anchors.centerIn: parent
-                    width: delegate.width
-                    height: delegate.height
-                    onClicked: {
+                } //Image
+                Text {
+                    font.bold: true
+                    font.pixelSize: 14
+                    Layout.fillWidth: true
+                    text: model.type + " - " + model.description
+                    horizontalAlignment: Text.AlignHCenter
+                } //Text
+                Image {
+                    Layout.margins: 2
+                    source: {
                         if (model.playing === "playing") {
-                            model.playing = "stopped"
+                            return "qrc:/images/play.png"
                         }
-                        else if (model.playing === "stopped") {
-                            model.playing = "playing"
-                        }
+                        return "qrc:/images/stop.png"
                     }
-                }
-            }
-            Image {
-                source: {
+                } //Image
+            } //RowLayout
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
                     if (model.playing === "playing") {
-                        return "qrc:/images/play.png"
+                        model.playing = "stopped"
                     }
-                    return "qrc:/images/stop.png"
+                    else if (model.playing === "stopped") {
+                        model.playing = "playing"
+                    }
                 }
-            }
-        }
-    }
-}
+            } //MouseArea
+        } //Rectangle
+    } //ListView
+}//Frame
